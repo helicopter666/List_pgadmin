@@ -1,0 +1,59 @@
+x-app: &app
+  image: document-search-local:0.1
+  env_file: .env
+  environment:
+    DATABASE_URL: postgresql+psycopg://docsearch:${POSTGRES_PASSWORD:?Run prepare_env.py}@db:5432/document_search
+    STORAGE_DIR: /data/uploads
+    HF_HOME: /data/model-cache
+  volumes:
+    - uploads:/data/uploads
+    - model_cache:/data/model-cache
+services:
+  db:
+    image: pgvector/pgvector:0.8.7-pg15-bookworm
+    environment:
+      POSTGRES_DB: document_search
+      POSTGRES_USER: docsearch
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run prepare_env.py}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docsearch -d document_search"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+  migrate:
+    <<: *app
+    command: ["alembic","upgrade","head"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+  web:
+    <<: *app
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+  worker:
+    <<: *app
+    command: ["python","-m","app.worker"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+volumes:
+  postgres_data:
+  uploads:
+  model_cache:

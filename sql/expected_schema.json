@@ -1,0 +1,609 @@
+{
+  "columns": [
+    {
+      "table_name": "categories",
+      "column_name": "category_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": "a"
+    },
+    {
+      "table_name": "categories",
+      "column_name": "name",
+      "data_type": "character varying(150)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "categories",
+      "column_name": "description",
+      "data_type": "text",
+      "not_null": false,
+      "identity": ""
+    },
+    {
+      "table_name": "chunk_embeddings",
+      "column_name": "chunk_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "chunk_embeddings",
+      "column_name": "model_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "chunk_embeddings",
+      "column_name": "embedding",
+      "data_type": "vector",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "chunk_embeddings",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "collection_access",
+      "column_name": "user_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "collection_access",
+      "column_name": "collection_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "collections",
+      "column_name": "collection_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": "a"
+    },
+    {
+      "table_name": "collections",
+      "column_name": "name",
+      "data_type": "character varying(200)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "collections",
+      "column_name": "description",
+      "data_type": "text",
+      "not_null": false,
+      "identity": ""
+    },
+    {
+      "table_name": "collections",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "document_categories",
+      "column_name": "document_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "document_categories",
+      "column_name": "category_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "document_chunks",
+      "column_name": "chunk_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": "a"
+    },
+    {
+      "table_name": "document_chunks",
+      "column_name": "document_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "document_chunks",
+      "column_name": "chunk_number",
+      "data_type": "integer",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "document_chunks",
+      "column_name": "content",
+      "data_type": "text",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "document_chunks",
+      "column_name": "start_offset",
+      "data_type": "integer",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "document_chunks",
+      "column_name": "end_offset",
+      "data_type": "integer",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "document_chunks",
+      "column_name": "page_number",
+      "data_type": "integer",
+      "not_null": false,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "document_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": "a"
+    },
+    {
+      "table_name": "documents",
+      "column_name": "collection_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "uploaded_by",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "title",
+      "data_type": "character varying(500)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "original_filename",
+      "data_type": "character varying(500)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "storage_key",
+      "data_type": "text",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "file_format",
+      "data_type": "character varying(10)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "extracted_text",
+      "data_type": "text",
+      "not_null": false,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "processing_status",
+      "data_type": "character varying(20)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "error_message",
+      "data_type": "text",
+      "not_null": false,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "documents",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "embedding_models",
+      "column_name": "model_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": "a"
+    },
+    {
+      "table_name": "embedding_models",
+      "column_name": "profile_name",
+      "data_type": "character varying(150)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "embedding_models",
+      "column_name": "model_name",
+      "data_type": "text",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "embedding_models",
+      "column_name": "model_revision",
+      "data_type": "text",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "embedding_models",
+      "column_name": "dimension",
+      "data_type": "integer",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "embedding_models",
+      "column_name": "encoding_config",
+      "data_type": "jsonb",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "roles",
+      "column_name": "role_id",
+      "data_type": "smallint",
+      "not_null": true,
+      "identity": "a"
+    },
+    {
+      "table_name": "roles",
+      "column_name": "code",
+      "data_type": "character varying(30)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "roles",
+      "column_name": "name",
+      "data_type": "character varying(100)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "users",
+      "column_name": "user_id",
+      "data_type": "bigint",
+      "not_null": true,
+      "identity": "a"
+    },
+    {
+      "table_name": "users",
+      "column_name": "login",
+      "data_type": "character varying(100)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "users",
+      "column_name": "password_hash",
+      "data_type": "text",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "users",
+      "column_name": "display_name",
+      "data_type": "character varying(200)",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "users",
+      "column_name": "role_id",
+      "data_type": "smallint",
+      "not_null": true,
+      "identity": ""
+    },
+    {
+      "table_name": "users",
+      "column_name": "is_active",
+      "data_type": "boolean",
+      "not_null": true,
+      "identity": ""
+    }
+  ],
+  "constraints": [
+    {
+      "table_name": "categories",
+      "conname": "ck_categories_name",
+      "definition": "CHECK ((btrim((name)::text) <> ''::text))"
+    },
+    {
+      "table_name": "categories",
+      "conname": "pk_categories",
+      "definition": "PRIMARY KEY (category_id)"
+    },
+    {
+      "table_name": "categories",
+      "conname": "uq_categories_name",
+      "definition": "UNIQUE (name)"
+    },
+    {
+      "table_name": "chunk_embeddings",
+      "conname": "ck_chunk_embeddings_nonzero",
+      "definition": "CHECK ((vector_norm(embedding) > (0)::double precision))"
+    },
+    {
+      "table_name": "chunk_embeddings",
+      "conname": "fk_chunk_embeddings_chunk",
+      "definition": "FOREIGN KEY (chunk_id) REFERENCES docsearch.document_chunks(chunk_id) ON UPDATE RESTRICT ON DELETE CASCADE"
+    },
+    {
+      "table_name": "chunk_embeddings",
+      "conname": "fk_chunk_embeddings_model",
+      "definition": "FOREIGN KEY (model_id) REFERENCES docsearch.embedding_models(model_id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "chunk_embeddings",
+      "conname": "pk_chunk_embeddings",
+      "definition": "PRIMARY KEY (chunk_id, model_id)"
+    },
+    {
+      "table_name": "collection_access",
+      "conname": "fk_collection_access_collection",
+      "definition": "FOREIGN KEY (collection_id) REFERENCES docsearch.collections(collection_id) ON UPDATE RESTRICT ON DELETE CASCADE"
+    },
+    {
+      "table_name": "collection_access",
+      "conname": "fk_collection_access_user",
+      "definition": "FOREIGN KEY (user_id) REFERENCES docsearch.users(user_id) ON UPDATE RESTRICT ON DELETE CASCADE"
+    },
+    {
+      "table_name": "collection_access",
+      "conname": "pk_collection_access",
+      "definition": "PRIMARY KEY (user_id, collection_id)"
+    },
+    {
+      "table_name": "collections",
+      "conname": "ck_collections_name",
+      "definition": "CHECK ((btrim((name)::text) <> ''::text))"
+    },
+    {
+      "table_name": "collections",
+      "conname": "pk_collections",
+      "definition": "PRIMARY KEY (collection_id)"
+    },
+    {
+      "table_name": "collections",
+      "conname": "uq_collections_name",
+      "definition": "UNIQUE (name)"
+    },
+    {
+      "table_name": "document_categories",
+      "conname": "fk_document_categories_category",
+      "definition": "FOREIGN KEY (category_id) REFERENCES docsearch.categories(category_id) ON UPDATE RESTRICT ON DELETE CASCADE"
+    },
+    {
+      "table_name": "document_categories",
+      "conname": "fk_document_categories_document",
+      "definition": "FOREIGN KEY (document_id) REFERENCES docsearch.documents(document_id) ON UPDATE RESTRICT ON DELETE CASCADE"
+    },
+    {
+      "table_name": "document_categories",
+      "conname": "pk_document_categories",
+      "definition": "PRIMARY KEY (document_id, category_id)"
+    },
+    {
+      "table_name": "document_chunks",
+      "conname": "ck_document_chunks_content",
+      "definition": "CHECK ((btrim(content) <> ''::text))"
+    },
+    {
+      "table_name": "document_chunks",
+      "conname": "ck_document_chunks_length",
+      "definition": "CHECK ((char_length(content) = (end_offset - start_offset)))"
+    },
+    {
+      "table_name": "document_chunks",
+      "conname": "ck_document_chunks_number",
+      "definition": "CHECK ((chunk_number > 0))"
+    },
+    {
+      "table_name": "document_chunks",
+      "conname": "ck_document_chunks_offsets",
+      "definition": "CHECK (((start_offset >= 0) AND (end_offset > start_offset)))"
+    },
+    {
+      "table_name": "document_chunks",
+      "conname": "ck_document_chunks_page",
+      "definition": "CHECK (((page_number IS NULL) OR (page_number > 0)))"
+    },
+    {
+      "table_name": "document_chunks",
+      "conname": "fk_document_chunks_document",
+      "definition": "FOREIGN KEY (document_id) REFERENCES docsearch.documents(document_id) ON UPDATE RESTRICT ON DELETE CASCADE"
+    },
+    {
+      "table_name": "document_chunks",
+      "conname": "pk_document_chunks",
+      "definition": "PRIMARY KEY (chunk_id)"
+    },
+    {
+      "table_name": "document_chunks",
+      "conname": "uq_document_chunks_number",
+      "definition": "UNIQUE (document_id, chunk_number)"
+    },
+    {
+      "table_name": "documents",
+      "conname": "ck_documents_error",
+      "definition": "CHECK (((((processing_status)::text = 'error'::text) AND (error_message IS NOT NULL) AND (btrim(error_message) <> ''::text)) OR (((processing_status)::text <> 'error'::text) AND (error_message IS NULL))))"
+    },
+    {
+      "table_name": "documents",
+      "conname": "ck_documents_filename",
+      "definition": "CHECK ((btrim((original_filename)::text) <> ''::text))"
+    },
+    {
+      "table_name": "documents",
+      "conname": "ck_documents_format",
+      "definition": "CHECK (((file_format)::text = ANY ((ARRAY['txt'::character varying, 'docx'::character varying, 'pdf'::character varying])::text[])))"
+    },
+    {
+      "table_name": "documents",
+      "conname": "ck_documents_ready_text",
+      "definition": "CHECK ((((processing_status)::text <> 'ready'::text) OR ((extracted_text IS NOT NULL) AND (btrim(extracted_text) <> ''::text))))"
+    },
+    {
+      "table_name": "documents",
+      "conname": "ck_documents_status",
+      "definition": "CHECK (((processing_status)::text = ANY ((ARRAY['pending'::character varying, 'processing'::character varying, 'ready'::character varying, 'error'::character varying])::text[])))"
+    },
+    {
+      "table_name": "documents",
+      "conname": "ck_documents_storage_key",
+      "definition": "CHECK ((btrim(storage_key) <> ''::text))"
+    },
+    {
+      "table_name": "documents",
+      "conname": "ck_documents_title",
+      "definition": "CHECK ((btrim((title)::text) <> ''::text))"
+    },
+    {
+      "table_name": "documents",
+      "conname": "fk_documents_collection",
+      "definition": "FOREIGN KEY (collection_id) REFERENCES docsearch.collections(collection_id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "documents",
+      "conname": "fk_documents_uploaded_by",
+      "definition": "FOREIGN KEY (uploaded_by) REFERENCES docsearch.users(user_id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "documents",
+      "conname": "pk_documents",
+      "definition": "PRIMARY KEY (document_id)"
+    },
+    {
+      "table_name": "documents",
+      "conname": "uq_documents_storage_key",
+      "definition": "UNIQUE (storage_key)"
+    },
+    {
+      "table_name": "embedding_models",
+      "conname": "ck_embedding_models_config",
+      "definition": "CHECK ((jsonb_typeof(encoding_config) = 'object'::text))"
+    },
+    {
+      "table_name": "embedding_models",
+      "conname": "ck_embedding_models_dimension",
+      "definition": "CHECK (((dimension >= 1) AND (dimension <= 16000)))"
+    },
+    {
+      "table_name": "embedding_models",
+      "conname": "ck_embedding_models_name",
+      "definition": "CHECK ((btrim(model_name) <> ''::text))"
+    },
+    {
+      "table_name": "embedding_models",
+      "conname": "ck_embedding_models_profile",
+      "definition": "CHECK ((btrim((profile_name)::text) <> ''::text))"
+    },
+    {
+      "table_name": "embedding_models",
+      "conname": "ck_embedding_models_revision",
+      "definition": "CHECK ((btrim(model_revision) <> ''::text))"
+    },
+    {
+      "table_name": "embedding_models",
+      "conname": "pk_embedding_models",
+      "definition": "PRIMARY KEY (model_id)"
+    },
+    {
+      "table_name": "embedding_models",
+      "conname": "uq_embedding_models_profile",
+      "definition": "UNIQUE (profile_name)"
+    },
+    {
+      "table_name": "roles",
+      "conname": "ck_roles_code",
+      "definition": "CHECK (((code)::text ~ '^[a-z][a-z0-9_]*$'::text))"
+    },
+    {
+      "table_name": "roles",
+      "conname": "ck_roles_name",
+      "definition": "CHECK ((btrim((name)::text) <> ''::text))"
+    },
+    {
+      "table_name": "roles",
+      "conname": "pk_roles",
+      "definition": "PRIMARY KEY (role_id)"
+    },
+    {
+      "table_name": "roles",
+      "conname": "uq_roles_code",
+      "definition": "UNIQUE (code)"
+    },
+    {
+      "table_name": "users",
+      "conname": "ck_users_display_name",
+      "definition": "CHECK ((btrim((display_name)::text) <> ''::text))"
+    },
+    {
+      "table_name": "users",
+      "conname": "ck_users_login",
+      "definition": "CHECK (((btrim((login)::text) <> ''::text) AND ((login)::text = lower(btrim((login)::text)))))"
+    },
+    {
+      "table_name": "users",
+      "conname": "ck_users_password_hash",
+      "definition": "CHECK ((btrim(password_hash) <> ''::text))"
+    },
+    {
+      "table_name": "users",
+      "conname": "fk_users_role",
+      "definition": "FOREIGN KEY (role_id) REFERENCES docsearch.roles(role_id) ON UPDATE RESTRICT ON DELETE RESTRICT"
+    },
+    {
+      "table_name": "users",
+      "conname": "pk_users",
+      "definition": "PRIMARY KEY (user_id)"
+    },
+    {
+      "table_name": "users",
+      "conname": "uq_users_login",
+      "definition": "UNIQUE (login)"
+    }
+  ]
+}

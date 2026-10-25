@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<section class="panel narrow"><p class="eyebrow">ДЕЙСТВИЕ НЕ ВЫПОЛНЕНО</p><h1>Не получилось продолжить</h1><p>Вернитесь на предыдущую страницу, проверьте введённые данные и повторите действие.</p><a class="button" href="{{'/' if user else '/login'}}">{{'В архив' if user else 'На страницу входа'}}</a></section>{% endblock %}

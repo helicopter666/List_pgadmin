@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация · Лист{% endblock %}
+{% block content %}
+<section class="login panel">
+  <nav class="auth-tabs" aria-label="Вход и регистрация"><a href="/login">Вход</a><a href="/register" aria-current="page">Регистрация</a></nav>
+  <p class="eyebrow">ВАШ АРХИВ ЗНАНИЙ</p>
+  <h1>Создайте аккаунт.</h1>
+  <p class="muted">Общие коллекции доступны сразу после регистрации. Доступ к закрытым выдаёт администратор.</p>
+  <form method="post" action="/register" class="stack">
+    <input type="hidden" name="csrf" value="{{csrf}}">
+    <label>Ваше имя<input name="display_name" required maxlength="200" autocomplete="name" value="{{name_value|default('')}}" autofocus></label>
+    <label>Логин<input name="login" required minlength="3" maxlength="100" autocomplete="username" value="{{login_value|default('')}}" aria-describedby="login-hint"></label>
+    <small id="login-hint" class="muted">От 3 символов: латинские буквы, цифры, точка, дефис или подчёркивание. Начните с буквы или цифры.</small>
+    <label>Пароль<input type="password" name="password" required minlength="10" maxlength="256" autocomplete="new-password" aria-describedby="password-hint"></label>
+    <small id="password-hint" class="muted">От 10 до 256 символов.</small>
+    <label>Повторите пароль<input type="password" name="password_confirm" required minlength="10" maxlength="256" autocomplete="new-password"></label>
+    <button>Зарегистрироваться</button>
+  </form>
+  <p class="auth-note">Уже есть аккаунт? <a href="/login">Войти</a></p>
+</section>
+{% endblock %}

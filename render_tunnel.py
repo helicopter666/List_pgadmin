@@ -13,6 +13,36 @@ import uuid
 LOCAL_PORT = 15432
 SOCKET = '/tmp/docsearch-tailscaled.sock'
 
+DB_FAILURES = {
+    'auth': 'PostgreSQL отклонил пользователя или пароль: проверь DATABASE_URL в Render',
+    'database': 'PostgreSQL доступен, но база document_search не найдена',
+    'access': 'PostgreSQL отклонил соединение по pg_hba.conf или настройкам SSL',
+    'timeout': 'Тайм-аут соединения: проверь Mac, Tailscale Serve и доступ TCP 5433 в правилах Tailscale',
+    'refused': 'Соединение закрыто или отклонено: проверь Docker PostgreSQL и проброс 127.0.0.1:5433 на Mac',
+    'dependency': 'Не загружается SQLAlchemy или psycopg: проверь requirements.txt и сборку образа',
+    'other': 'Не удалось проверить PostgreSQL; причина не относится к известным типам',
+}
+
+
+def classify_database_error(exc):
+    original = getattr(exc, 'orig', exc)
+    state = getattr(original, 'sqlstate', None)
+    # Inspect messages privately; only a fixed code reaches logs.
+    detail = str(original).lower()
+    if state in ('28P01', '28000') or 'password authentication failed' in detail:
+        return 'auth'
+    if state == '3D000' or ('database' in detail and 'does not exist' in detail):
+        return 'database'
+    if 'pg_hba' in detail or 'ssl' in detail:
+        return 'access'
+    if 'timeout' in detail or 'timed out' in detail:
+        return 'timeout'
+    if 'refused' in detail or 'closed' in detail or 'eof' in detail:
+        return 'refused'
+    if isinstance(exc, ImportError):
+        return 'dependency'
+    return 'other'
+
 
 def validate(env):
     required = ('TAILSCALE_AUTHKEY', 'TAILSCALE_DB_HOST', 'DATABASE_URL', 'SESSION_SECRET')
@@ -87,7 +117,15 @@ class Relay:
                 stderr=asyncio.subprocess.DEVNULL, env=child_env)
             # Preserve half-close: PostgreSQL can still send its final response
             # after the client closes its sending side.
-            await asyncio.gather(pump(reader, proc.stdin), pump(proc.stdout, writer))
+            outgoing = asyncio.create_task(pump(reader, proc.stdin))
+            incoming = asyncio.create_task(pump(proc.stdout, writer))
+            try:
+                # Remote EOF must also release an idle client and its subprocess.
+                await incoming
+            finally:
+                outgoing.cancel()
+                incoming.cancel()
+                await asyncio.gather(outgoing, incoming, return_exceptions=True)
         except asyncio.CancelledError:
             raise
         except (OSError, ConnectionError):
@@ -136,22 +174,30 @@ async def check_database():
     # No URL or database exception text is printed, because it can contain secrets.
     probe = """import os
 import sys
+from render_tunnel import classify_database_error
 try:
     from sqlalchemy import create_engine, text
-    e = create_engine(os.environ['DATABASE_URL'], connect_args={'connect_timeout': 8})
+    e = create_engine(os.environ['DATABASE_URL'], connect_args={'connect_timeout': 20}, hide_parameters=True)
     with e.connect() as c:
         c.execute(text('SELECT 1'))
     e.dispose()
-except Exception:
+except Exception as exc:
+    print(classify_database_error(exc), flush=True)
     sys.exit(1)
 """
+    child_env = dict(os.environ)
+    child_env.pop('TAILSCALE_AUTHKEY', None)
     proc = await asyncio.create_subprocess_exec(
         sys.executable, '-c', probe,
-        stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL)
+        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL, env=child_env)
     try:
-        return await asyncio.wait_for(proc.wait(), 15) == 0
+        stdout, _ = await asyncio.wait_for(proc.communicate(), 25)
+        if proc.returncode == 0:
+            return None
+        code = stdout.decode(errors='replace').strip()
+        return code if code in DB_FAILURES else 'other'
     except asyncio.TimeoutError:
-        return False
+        return 'timeout'
     finally:
         await stop_process(proc)
 
@@ -167,11 +213,12 @@ async def main():
     pending = []
     try:
         daemon_env = dict(env)
+        daemon_env.pop('PORT', None)
         for key in ('TAILSCALE_AUTHKEY', 'DATABASE_URL', 'SESSION_SECRET'):
             daemon_env.pop(key, None)
         daemon = await asyncio.create_subprocess_exec(
             'tailscaled', '--tun=userspace-networking', '--state=mem:',
-            '--socket=' + SOCKET, env=daemon_env)
+            '--socket=' + SOCKET, '--port=0', env=daemon_env)
         for _ in range(100):
             if daemon.returncode is not None:
                 raise RuntimeError('tailscaled завершился до запуска')
@@ -184,11 +231,15 @@ async def main():
         print('Tailscale подключён; проверяем PostgreSQL на Mac', flush=True)
         relay = Relay(host)
         server = await asyncio.start_server(relay.handle, '127.0.0.1', LOCAL_PORT)
-        for _ in range(3):
+        for attempt in range(6):
             if stop.is_set():
                 return
-            if await check_database():
+            failure = await check_database()
+            if failure is None:
                 break
+            print(f'Проверка БД {attempt + 1}/6: ' + DB_FAILURES[failure], flush=True)
+            if failure in ('auth', 'database', 'access', 'dependency'):
+                raise RuntimeError(DB_FAILURES[failure])
             await asyncio.sleep(2)
         else:
             raise RuntimeError('Нет подключения к PostgreSQL: проверь Mac, Serve, права Tailscale и пароль БД')
